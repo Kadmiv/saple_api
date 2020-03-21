@@ -1,6 +1,7 @@
 package com.kadmiv.co_share_api.repo
 
 import com.kadmiv.co_share_api.models.Card
+import org.springframework.data.jpa.repository.JpaRepository
 
 import org.springframework.data.jpa.repository.Query
 import org.springframework.data.repository.CrudRepository
@@ -9,7 +10,7 @@ import org.springframework.transaction.annotation.Transactional
 
 @Repository
 @Transactional
-interface Repository : CrudRepository<Card, Long?> {
+interface Repository : JpaRepository<Card, Long?> {
 
     @Query("SELECT item FROM Card item ORDER BY rating DESC, followersCount DESC")
     fun getMostPopularItems(): MutableIterable<Card>?
