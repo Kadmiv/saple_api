@@ -1,8 +1,8 @@
 package com.kadmiv.co_share_api.controllers
 
 //import org.apache.log4j.Logger
-import com.kadmiv.co_share_api.models.Card
-import com.kadmiv.co_share_api.models.InfoResponse
+import com.kadmiv.co_share_api.models.base.InfoResponse
+import com.kadmiv.co_share_api.models.dto.Card
 import com.kadmiv.co_share_api.repo.RepoService
 import org.springframework.beans.factory.annotation.Autowired
 import org.springframework.http.HttpStatus

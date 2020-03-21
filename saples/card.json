@@ -1,3 +1,18 @@
-{
-
-}
+[
+  {
+    "id": 1,
+    "name": "string",
+    "code": "string",
+    "bonusPercent": 0,
+    "rating": 0,
+    "followersCount": 0
+  },
+  {
+    "id": 2,
+    "name": "some card",
+    "code": "some card code",
+    "bonusPercent": 10,
+    "rating": 1,
+    "followersCount": 123
+  }
+]

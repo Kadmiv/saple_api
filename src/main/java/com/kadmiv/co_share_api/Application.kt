@@ -9,8 +9,6 @@ import org.springframework.boot.context.event.ApplicationReadyEvent
 import org.springframework.context.annotation.ComponentScan
 import org.springframework.context.event.EventListener
 import org.springframework.core.env.Environment
-import java.io.File
-import java.io.FileReader
 import java.util.*
 import javax.annotation.PostConstruct
 
@@ -19,7 +17,7 @@ import javax.annotation.PostConstruct
 @ComponentScan(
         value = [
             "com.kadmiv.co_share_api.controllers",
-//            "com.kadmiv.co_share_api.models",
+            "com.kadmiv.co_share_api.config",
             "com.kadmiv.co_share_api.repo"
         ]
 )
@@ -36,7 +34,17 @@ open class Application {
         var port = environment?.getProperty("local.server.port")
 
         LOG.info("http://localhost:$port")
-//        LOG.info("http://localhost:$port/swagger-ui.html")
+        LOG.info("http://localhost:$port/swagger-ui.html")
+
+//        val cardSample = Card().apply {
+//            name = "some card"
+//            code = "some card code"
+//            bonusPercent = 10.0
+//            rating = 1.0
+//            followersCount = 123
+//        }
+//
+//        println(Gson().toJson(cardSample))
     }
 
     @PostConstruct

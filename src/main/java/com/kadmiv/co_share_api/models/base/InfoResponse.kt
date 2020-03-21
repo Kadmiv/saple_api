@@ -1,4 +1,4 @@
-package com.kadmiv.co_share_api.models
+package com.kadmiv.co_share_api.models.base
 
 class InfoResponse {
     //    var code = 0

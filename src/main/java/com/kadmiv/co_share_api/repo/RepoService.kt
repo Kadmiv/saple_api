@@ -1,7 +1,7 @@
 package com.kadmiv.co_share_api.repo
 
 
-import com.kadmiv.co_share_api.models.Card
+import com.kadmiv.co_share_api.models.dto.Card
 import org.springframework.beans.factory.annotation.Autowired
 import org.springframework.stereotype.Service;
 
