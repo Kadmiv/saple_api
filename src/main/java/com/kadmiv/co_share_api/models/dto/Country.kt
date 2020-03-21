@@ -4,7 +4,10 @@ import javax.persistence.*
 
 const val COUNTRY_JOIN_NAME = "country_id"
 
+@Entity
+@Table(name = "COUNTRY")
 class Country {
+
     @Id
     @GeneratedValue(strategy = GenerationType.AUTO) //
     // @GeneratedValue(strategy = GenerationType.SEQUENCE, generator = "id_Sequence")

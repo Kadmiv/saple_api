@@ -1,4 +1,4 @@
-package com.kadmiv.co_share_api.repo
+package com.kadmiv.co_share_api.repo.country
 
 import com.kadmiv.co_share_api.models.dto.Card
 import com.kadmiv.co_share_api.models.dto.Company

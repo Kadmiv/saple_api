@@ -4,7 +4,7 @@ package com.kadmiv.co_share_api.controllers
 import com.kadmiv.co_share_api.models.base.ErrorBuilder
 import com.kadmiv.co_share_api.models.base.SuccessBuilder
 import com.kadmiv.co_share_api.models.dto.Card
-import com.kadmiv.co_share_api.repo.RepoService
+import com.kadmiv.co_share_api.repo.card.CardService
 import org.slf4j.LoggerFactory
 import org.springframework.beans.factory.annotation.Autowired
 import org.springframework.http.HttpStatus
@@ -26,7 +26,7 @@ class CardsController {
     private val controllerPath = CARD_PATH
 
     @Autowired
-    internal var dataRepository: RepoService? = null
+    internal var dataRepository: CardService? = null
 
     @GetMapping(produces = [MediaType.APPLICATION_JSON_VALUE])
     open fun getAllCards(): DeferredResult<ResponseEntity<*>> {

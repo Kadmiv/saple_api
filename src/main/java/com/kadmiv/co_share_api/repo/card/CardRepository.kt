@@ -1,4 +1,4 @@
-package com.kadmiv.co_share_api.repo
+package com.kadmiv.co_share_api.repo.card
 
 import com.kadmiv.co_share_api.models.dto.Card
 import org.springframework.data.jpa.repository.JpaRepository
