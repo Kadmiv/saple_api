@@ -21,7 +21,7 @@ class Card {
     //    @Column(nullable = false)
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = COMPANY_CARD_JOIN_NAME)
-    var company: CardСompany? = null
+    var company: Company? = null
 
     @Column(nullable = false)
     var name = ""

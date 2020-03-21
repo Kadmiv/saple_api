@@ -9,16 +9,17 @@ import org.springframework.http.ResponseEntity
 import org.springframework.web.bind.annotation.*
 import org.springframework.web.context.request.async.DeferredResult
 
-const val COMPANY_PATH = "company"
+
+const val CATEGORY_PATH = "category"
 
 @RestController()
-@RequestMapping(value = ["/$COMPANY_PATH"])
+@RequestMapping(value = ["/$CATEGORY_PATH"])
 //@Transactional
-class CompaniesController {
+class CategoryController {
 
-    private val controllerPath = COMPANY_PATH
+    private val controllerPath = CATEGORY_PATH
 
-    private val LOG = LoggerFactory.getLogger(CompaniesController::class.java)
+    private val LOG = LoggerFactory.getLogger(CategoryController::class.java)
 
     @Autowired
     internal var dataRepository: RepoService? = null

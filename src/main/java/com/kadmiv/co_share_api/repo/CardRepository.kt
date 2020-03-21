@@ -9,7 +9,7 @@ import org.springframework.transaction.annotation.Transactional
 
 @Repository
 @Transactional
-interface Repository : JpaRepository<Card, Long?> {
+interface CardRepository : JpaRepository<Card, Long?> {
 
     @Query("SELECT item FROM Card item ORDER BY rating DESC, followersCount DESC")
     fun getMostPopularItems(): MutableIterable<Card>?

@@ -9,31 +9,37 @@ import org.springframework.stereotype.Service;
 open class RepoService {
 
     @Autowired
-    internal var dataRepository: Repository? = null
+    internal var cardRepo: CardRepository? = null
+
+    @Autowired
+    internal var categoryRepo: CategoryRepository? = null
+
+    @Autowired
+    internal var companyRepo: CompanyRepository? = null
 
     fun insertItem(item: Card) {
 //        item.generateUUID()
-        dataRepository?.save(item)
+        cardRepo?.save(item)
     }
 
     fun insertItems(items: List<Card>) {
 //        for (item in items) {
 //            item.generateUUID()
 //        }
-        dataRepository?.saveAll(items)
+        cardRepo?.saveAll(items)
     }
 
     fun deleteItem(item: Card) {
-        dataRepository?.delete(item)
+        cardRepo?.delete(item)
     }
 
     fun updateItem(item: Card) {}
 
     fun getAllItems(): MutableIterable<Card>? {
-        return dataRepository?.findAll()
+        return cardRepo?.findAll()
     }
 
     fun getMostPopularItems(): MutableIterable<Card>? {
-        return dataRepository?.getMostPopularItems()
+        return cardRepo?.getMostPopularItems()
     }
 }
