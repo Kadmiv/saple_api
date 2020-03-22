@@ -1,6 +1,7 @@
 package com.kadmiv.co_share_api.controllers
 
 
+import com.kadmiv.co_share_api.config.secure.EncoderWrapper
 import com.kadmiv.co_share_api.models.base.ErrorBuilder
 import com.kadmiv.co_share_api.models.base.SuccessBuilder
 import com.kadmiv.co_share_api.models.dto.RegistrationModel
@@ -37,7 +38,7 @@ class RegistrationController {
     private val userRepo: UserRepo? = null
 
     @Autowired
-    private val bCryptPasswordEncoder: BCryptPasswordEncoder? = null
+    private val encoderWrapper: EncoderWrapper? = null
 
 //    @GetMapping()
 //    fun registration(): String {
@@ -64,7 +65,7 @@ class RegistrationController {
                                 isActive = true
                                 userLogin = user.userLogin
                                 roles = Collections.singleton(Role.USER)
-                                userPassword = bCryptPasswordEncoder?.encode(user.userPassword)
+                                userPassword = encoderWrapper?.getEncoder()?.encode(user.userPassword)
                             }
 
                     try {

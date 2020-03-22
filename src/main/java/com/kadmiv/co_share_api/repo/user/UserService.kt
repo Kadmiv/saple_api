@@ -1,6 +1,7 @@
 package com.kadmiv.co_share_api.repo.user
 
 import org.springframework.beans.factory.annotation.Autowired
+import org.springframework.security.core.userdetails.User
 import org.springframework.security.core.userdetails.UserDetails
 import org.springframework.security.core.userdetails.UserDetailsService
 import org.springframework.security.core.userdetails.UsernameNotFoundException
@@ -14,6 +15,11 @@ class UserService : UserDetailsService {
 
     @Throws(UsernameNotFoundException::class)
     override fun loadUserByUsername(userLogin: String): UserDetails {
-        return userRepo!!.findByUserLogin(userLogin)!!
+        val user = userRepo!!.findByUserLogin(userLogin)!!
+        return user
     }
+
+//    fun getAll(): MutableList<com.kadmiv.co_share_api.models.dto.User?> {
+//        return userRepo!!.findAll()
+//    }
 }

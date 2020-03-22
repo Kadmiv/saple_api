@@ -1,17 +1,13 @@
 package com.kadmiv.co_share_api.config.secure
 
+import com.kadmiv.co_share_api.controllers.REGISTRATION_PATH
 import com.kadmiv.co_share_api.repo.user.UserService
 import org.springframework.beans.factory.annotation.Autowired
-import org.springframework.context.annotation.Bean
 import org.springframework.context.annotation.Configuration
 import org.springframework.security.config.annotation.authentication.builders.AuthenticationManagerBuilder
 import org.springframework.security.config.annotation.web.builders.HttpSecurity
 import org.springframework.security.config.annotation.web.configuration.EnableWebSecurity
 import org.springframework.security.config.annotation.web.configuration.WebSecurityConfigurerAdapter
-import org.springframework.security.core.userdetails.User
-import org.springframework.security.core.userdetails.UserDetails
-
-//import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder
 
 
 @Configuration
@@ -22,13 +18,10 @@ open class SecurityConfig : WebSecurityConfigurerAdapter() {
     private val userService: UserService? = null
 
     @Autowired
+    private val encoderWrapper: EncoderWrapper? = null
+
+    @Autowired
     private val authEntryPoint: AuthenticationEntryPointImpl? = null
-
-
-//    @Bean
-//    open fun bCryptPasswordEncoder(): BCryptPasswordEncoder? {
-//        return BCryptPasswordEncoder()
-//    }
 
 
     @Throws(Exception::class)
@@ -36,6 +29,7 @@ open class SecurityConfig : WebSecurityConfigurerAdapter() {
         http
                 .csrf().disable()
                 .authorizeRequests()
+                .antMatchers("/$REGISTRATION_PATH").permitAll()
                 .anyRequest().authenticated()
                 .and()
                 .formLogin().disable()
@@ -72,22 +66,39 @@ open class SecurityConfig : WebSecurityConfigurerAdapter() {
 //        http.httpBasic().authenticationEntryPoint(authEntryPoint);
     }
 
-//
-//    @Autowired
-//    @Throws(Exception::class)
-//    protected open fun configureGlobal(auth: AuthenticationManagerBuilder) {
-//        auth.userDetailsService<UserDetailsService>(userService).passwordEncoder(bCryptPasswordEncoder())
-//    }
-
 
     @Autowired
     @Throws(Exception::class)
-    open fun configureGlobal(auth: AuthenticationManagerBuilder) {
+    protected open fun configureGlobal(auth: AuthenticationManagerBuilder) {
 
-        val u1: UserDetails = User.withUsername("admin1234").password("{noop}admin1234").roles("USER").build()
+        auth
+                .userDetailsService(userService)
+                .passwordEncoder(encoderWrapper?.getEncoder())
 
-        auth.inMemoryAuthentication()
-                .withUser(u1)
+//        auth.inMemoryAuthentication()
+//                .withUser("spring")
+//                .password(encoder.encode("secret"))
+//                .roles("USER")
     }
+
+
+//    @Autowired
+//    @Throws(Exception::class)
+//    open fun configureGlobal(auth: AuthenticationManagerBuilder) {
+//
+//        val users = userService?.getAll()
+//        if (users != null) {
+//            for (user in users) {
+//                auth.inMemoryAuthentication()
+//                        .withUser(user?.userLogin)
+//                        .password("{noop}${user?.userPassword}")
+//                        .roles(user?.roles?.first()?.name);
+//
+//                if (user != users.last()) {
+//                    auth.inMemoryAuthentication().and()
+//                }
+//            }
+//        }
+//    }
 
 }

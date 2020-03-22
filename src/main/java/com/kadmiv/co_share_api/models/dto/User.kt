@@ -53,7 +53,6 @@ class User : UserDetails {
     private val cards: Set<Card> = HashSet()
 
 
-
     override fun getAuthorities(): Collection<GrantedAuthority> {
         return roles as Collection<GrantedAuthority>
     }
@@ -63,7 +62,7 @@ class User : UserDetails {
     }
 
     override fun getUsername(): String {
-        return ""
+        return userLogin!!
     }
 
     override fun isCredentialsNonExpired(): Boolean {
@@ -71,7 +70,7 @@ class User : UserDetails {
     }
 
     override fun getPassword(): String {
-        return ""
+        return userPassword!!
     }
 
     override fun isAccountNonExpired(): Boolean {
