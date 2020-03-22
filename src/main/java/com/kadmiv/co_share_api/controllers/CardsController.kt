@@ -11,7 +11,6 @@ import org.springframework.beans.factory.annotation.Autowired
 import org.springframework.http.HttpStatus
 import org.springframework.http.MediaType
 import org.springframework.http.ResponseEntity
-import org.springframework.security.core.annotation.AuthenticationPrincipal
 import org.springframework.security.core.context.SecurityContextHolder
 import org.springframework.web.bind.annotation.*
 import org.springframework.web.context.request.async.DeferredResult
@@ -32,9 +31,11 @@ class CardsController {
     internal var dataRepository: CardService? = null
 
     @GetMapping(produces = [MediaType.APPLICATION_JSON_VALUE])
-    open fun getAllCards(@AuthenticationPrincipal user: User): DeferredResult<ResponseEntity<*>> {
+    open fun getAllUserCards(): DeferredResult<ResponseEntity<*>> {
         LOG.info("")
         var msg = ""
+
+        val authentication = SecurityContextHolder.getContext().authentication;
 
         val output = DeferredResult<ResponseEntity<*>>()
 
@@ -42,8 +43,14 @@ class CardsController {
 
         ForkJoinPool.commonPool().submit {
             try {
-                val data = dataRepository?.getAllItems()
-                output.setResult(ResponseEntity.status(HttpStatus.OK).body(data))
+
+                if (authentication != null) {
+                    val user: User = authentication.principal as User
+                    val data = dataRepository?.getAllUserCards(user)
+                    output.setResult(ResponseEntity.status(HttpStatus.OK).body(data))
+                }
+
+                output.setResult(ResponseEntity.status(HttpStatus.OK).body(arrayListOf<Card>()))
             } catch (ex: java.lang.Exception) {
                 msg = "Problem with data loading!!!"
                 output.setErrorResult(ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body(
@@ -63,7 +70,7 @@ class CardsController {
     @PostMapping(produces = [MediaType.APPLICATION_JSON_VALUE])
     open fun addNewCard(
 //            @AuthenticationPrincipal user: User,
-            @RequestBody dataSet: ArrayList<Card>
+            @RequestBody card: Card
     ): DeferredResult<ResponseEntity<*>> {
         LOG.info("")
 //        val requestDir = "$RESOURCE_PATH/$method"
@@ -82,21 +89,113 @@ class CardsController {
                 if (authentication != null) {
                     val user: User = authentication.principal as User
 
-                    for (card in dataSet) {
-                        card.author = user
-                        LOG.info("")
+//                    for (card in dataSet) {
+                    card.owner = user
+                    LOG.info("")
+//                    }
+                }
+
+                val validation = checkNewCard(card)
+
+                if (validation.isValid) {
+                    dataRepository?.insertItem(card)
+                    msg = "Data was add"
+                    output.setResult(ResponseEntity.status(HttpStatus.OK).body(
+                            SuccessBuilder()
+                                    .setStatus(HttpStatus.OK.value())
+                                    .setPath("/$controllerPath")
+                                    .setMessage(msg)
+                                    .build()
+                    ))
+                } else {
+                    msg = "Data wasn't add!!!"
+                    output.setErrorResult(ResponseEntity.status(HttpStatus.DESTINATION_LOCKED).body(
+                            ErrorBuilder()
+                                    .setMessage(msg)
+                                    .setError("Have same card error")
+                                    .setStatus(HttpStatus.DESTINATION_LOCKED.value())
+                                    .setPath("/$controllerPath")
+                                    .build()
+                    ))
+                }
+            } catch (ex: java.lang.Exception) {
+//                logger.error(method, ex)
+                msg = "Data wasn't add!!!"
+                output.setErrorResult(ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body(
+                        ErrorBuilder()
+                                .setMessage(msg)
+                                .setError(ex)
+                                .setStatus(HttpStatus.INTERNAL_SERVER_ERROR.value())
+                                .setPath("/$controllerPath")
+                                .build()
+                ))
+            }
+        }
+
+        return output
+    }
+
+    @PutMapping(produces = [MediaType.APPLICATION_JSON_VALUE])
+    open fun updateCard(
+            @RequestBody card: Card
+    ): DeferredResult<ResponseEntity<*>> {
+        LOG.info("")
+
+        var msg = ""
+
+        val authentication = SecurityContextHolder.getContext().authentication;
+
+        val output = DeferredResult<ResponseEntity<*>>()
+
+        prepareOutput(output)
+
+        ForkJoinPool.commonPool().submit {
+            try {
+
+                val opitonal = dataRepository?.findByID(card.id)
+                var oldCard = opitonal?.get()
+
+                if (oldCard == null)
+                    oldCard = card
+                else {
+                    val user: User = authentication.principal as User
+                    if (oldCard.owner!!.id != user.id) {
+                        msg = "Not have permission "
+                        output.setErrorResult(ResponseEntity.status(HttpStatus.NOT_ACCEPTABLE).body(
+                                ErrorBuilder()
+                                        .setMessage(msg)
+                                        .setError("Not card owner error")
+                                        .setStatus(HttpStatus.NOT_ACCEPTABLE.value())
+                                        .setPath("/$controllerPath")
+                                        .build()
+                        ))
+                        return@submit
                     }
                 }
 
-                dataRepository?.insertItems(dataSet)
-                msg = "Data was add"
-                output.setResult(ResponseEntity.status(HttpStatus.OK).body(
-                        SuccessBuilder()
-                                .setStatus(HttpStatus.OK.value())
-                                .setPath("/$controllerPath")
-                                .setMessage(msg)
-                                .build()
-                ))
+                val validation = checkNewCard(oldCard)
+
+                if (validation.isValid) {
+                    dataRepository?.insertItem(oldCard)
+                    msg = "Data was add. Is may share: ${oldCard.mayUseForShare}"
+                    output.setResult(ResponseEntity.status(HttpStatus.OK).body(
+                            SuccessBuilder()
+                                    .setStatus(HttpStatus.OK.value())
+                                    .setPath("/$controllerPath")
+                                    .setMessage(msg)
+                                    .build()
+                    ))
+                } else {
+                    msg = "Data wasn't add!!!"
+                    output.setErrorResult(ResponseEntity.status(HttpStatus.DESTINATION_LOCKED).body(
+                            ErrorBuilder()
+                                    .setMessage(msg)
+                                    .setError("Have same card error")
+                                    .setStatus(HttpStatus.DESTINATION_LOCKED.value())
+                                    .setPath("/$controllerPath")
+                                    .build()
+                    ))
+                }
             } catch (ex: java.lang.Exception) {
 //                logger.error(method, ex)
                 msg = "Data wasn't add!!!"
@@ -126,7 +225,17 @@ class CardsController {
         ForkJoinPool.commonPool().submit {
             try {
                 val data = dataRepository?.getMostPopularItems()
-                output.setResult(ResponseEntity.status(HttpStatus.OK).body(data))
+
+                val items = arrayListOf<Card>()
+                if (data != null) {
+                    for (card in data) {
+                        if (card.isActive && card.mayUseForShare) {
+                            items.add(card)
+                        }
+                    }
+                }
+
+                output.setResult(ResponseEntity.status(HttpStatus.OK).body(items))
             } catch (ex: java.lang.Exception) {
                 msg = "Problem with data loading!!!"
                 output.setErrorResult(ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body(
@@ -166,5 +275,36 @@ class CardsController {
         output.onCompletion {
             //            logger.info("onCompletion|Request $method")
         }
+    }
+
+    //FIxme - need fix this fucntion
+    private fun checkNewCard(user: Card): EntityValidation {
+        val validation = EntityValidation()
+        var msg = "Card is exists"
+
+//        val userFromDb: User? = userRepo?.findByUserLogin(user.userLogin)
+//
+//        if (userFromDb != null) {
+//            return validation.apply { message = msg }
+//        }
+//
+//        //Check login
+//        if (user.userLogin.isEmpty()) {
+//            msg = "Login is empty"
+//            return validation.apply { message = msg }
+//        }
+//
+//        if (user.userPassword.isEmpty()) {
+//            msg = "Password is empty"
+//            return validation.apply { message = msg }
+//        }
+//
+//        //Check password
+//        if (user.userPassword != user.userConfirmPassword) {
+//            msg = "Password is not the same"
+//            return validation.apply { message = msg }
+//        }
+
+        return validation.apply { isValid = true }
     }
 }

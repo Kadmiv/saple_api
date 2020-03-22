@@ -35,7 +35,7 @@ class Card {
     @JsonIgnore
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = USER_JOIN_NAME)
-    var author: User? = null
+    var owner: User? = null
 
 //    @OneToMany(mappedBy = "card",cascade= [CascadeType.ALL])
 //    var users: Set<User>? = null
@@ -62,8 +62,12 @@ class Card {
     var rating = 0.0
     @JsonIgnore
     var followersCount = 0
+
     @JsonIgnore
-    var isActive = false
+    var isActive = true
+
+    @JsonIgnore
+    var mayUseForShare = false
 
 
 //    @ManyToOne(fetch = FetchType.LAZY)

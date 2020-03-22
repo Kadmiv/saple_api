@@ -7,25 +7,15 @@ import javax.persistence.*
 import kotlin.collections.HashSet
 
 
-const val USER_JOIN_NAME = "author_card_id"
+const val USER_JOIN_NAME = "owner_card_id"
 
 @Entity
 @Table(name = "usr")
 class User : UserDetails {
 
-    //    @Id
-//    @GeneratedValue(strategy = GenerationType.AUTO)
-//    var id: Long? = null
-
-
     @Id
-//    @GeneratedValue(strategy = GenerationType.AUTO)
     @Column(name = "id", length = 16, unique = true, nullable = false)
-    var id: UUID? = null
-
-    init {
-        id = UUID.randomUUID()
-    }
+    var id: UUID? = UUID.randomUUID()
 
     var userLogin: String? = null
     //    var userEmail: String? = null
@@ -37,25 +27,6 @@ class User : UserDetails {
     @CollectionTable(name = "user_role", joinColumns = [JoinColumn(name = "user_id")])
     @Enumerated(EnumType.STRING)
     var roles: Set<Role>? = null
-
-//    @ManyToOne
-//    @JoinColumn(name = "card_id", nullable = true)
-//    var card: Card? = Card()
-
-//    @OneToMany(mappedBy = "author",cascade= [CascadeType.ALL])
-//    var cards: Set<Card>? = null
-
-//    @ManyToMany(cascade= [CascadeType.ALL])
-//    var cards: Set<Card>? = null
-
-
-//    @ManyToMany
-//    @JoinTable(
-//            name = "user_card",
-//            joinColumns = [JoinColumn(name = "user_id", referencedColumnName = "id")],
-//            inverseJoinColumns = [JoinColumn(name = "card_id", referencedColumnName = "id")]
-//    )
-//  private val cards: List<Card>? = null
 
     @ManyToMany(fetch = FetchType.LAZY, cascade = [CascadeType.PERSIST, CascadeType.MERGE])
     @JoinTable(
