@@ -13,6 +13,9 @@ class Card {
 //    @SequenceGenerator(name = "id_Sequence", sequenceName = "ID_SEQ")
     var id: Long = 0
 
+
+    var isActive = false
+
     //    @Column(nullable = false)
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = CATEGORY_CARD_JOIN_NAME)
@@ -23,6 +26,22 @@ class Card {
     @JoinColumn(name = COMPANY_CARD_JOIN_NAME)
     var company: Company? = null
 
+    //    @Column(nullable = false)
+    @ManyToOne(fetch = FetchType.LAZY)
+    @JoinColumn(name = USER_JOIN_NAME)
+    var author: User? = null
+
+//    @OneToMany(mappedBy = "card",cascade= [CascadeType.ALL])
+//    var users: Set<User>? = null
+
+    @ManyToMany(fetch = FetchType.LAZY, cascade = [CascadeType.PERSIST, CascadeType.MERGE],
+            mappedBy = "cards")
+    private val users: Set<User> = HashSet()
+
+//    @ManyToMany
+//    var users: Set<User>? = null
+
+
     @Column(nullable = false)
     var name = ""
 
@@ -32,6 +51,7 @@ class Card {
     var bonusPercent = 0.0
     var rating = 0.0
     var followersCount = 0
+
 
 //    @ManyToOne(fetch = FetchType.LAZY)
 //    var categories: Category? = null

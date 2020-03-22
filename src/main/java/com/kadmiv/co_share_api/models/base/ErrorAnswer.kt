@@ -19,15 +19,17 @@ class ErrorBuilder() {
         return this
     }
 
+
+    fun setError(error: Throwable): ErrorBuilder {
+        this.error = ExceptionUtils.getStackTrace(error)
+        return this
+    }
+
     fun setMessage(message: String): ErrorBuilder {
         this.message = message
         return this
     }
 
-    fun setMessage(message: Throwable): ErrorBuilder {
-        this.message = ExceptionUtils.getStackTrace(message)
-        return this
-    }
 
     fun setPath(path: String): ErrorBuilder {
         this.path = path
@@ -41,7 +43,7 @@ class ErrorBuilder() {
 
     fun build(): ErrorAnswer {
         val answer = ErrorAnswer().apply {
-            error = this@ErrorBuilder.error
+            this.error = this@ErrorBuilder.error
             this.message = this@ErrorBuilder.message
             this.path = this@ErrorBuilder.path
             this.status = this@ErrorBuilder.status

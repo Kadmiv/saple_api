@@ -3,7 +3,6 @@ package com.kadmiv.co_share_api.controllers
 //import org.apache.log4j.Logger
 import com.kadmiv.co_share_api.models.base.ErrorBuilder
 import com.kadmiv.co_share_api.models.base.SuccessBuilder
-import com.kadmiv.co_share_api.models.dto.Card
 import com.kadmiv.co_share_api.models.dto.Category
 import com.kadmiv.co_share_api.repo.category.CategoryService
 import org.slf4j.LoggerFactory
@@ -47,10 +46,10 @@ class CategoryController {
                 msg = "Problem with data loading!!!"
                 output.setErrorResult(ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body(
                         ErrorBuilder()
-                                .setError("Some Error")
+                                .setMessage(msg)
+                                .setError(ex)
                                 .setStatus(HttpStatus.INTERNAL_SERVER_ERROR.value())
                                 .setPath("/$controllerPath")
-                                .setMessage(msg)
                                 .build()
                 ))
             }
@@ -89,10 +88,10 @@ class CategoryController {
                 msg = "Data wasn't add!!!"
                 output.setErrorResult(ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body(
                         ErrorBuilder()
-                                .setError("Some Error")
+                                .setMessage(msg)
+                                .setError(ex)
                                 .setStatus(HttpStatus.INTERNAL_SERVER_ERROR.value())
                                 .setPath("/$controllerPath")
-                                .setMessage(msg)
                                 .build()
                 ))
             }

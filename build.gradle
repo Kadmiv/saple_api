@@ -39,6 +39,13 @@ dependencies {
     implementation 'org.springframework.boot:spring-boot-starter-web'
     implementation 'org.springframework.boot:spring-boot-starter-data-jdbc'
 
+    implementation 'org.thymeleaf:thymeleaf' //3.0.11.RELEASE
+
+//    implementation 'org.springframework.boot:spring-boot-starter-mustache'
+
+        implementation 'org.springframework.boot:spring-boot-starter-security'
+//    implementation 'org.springframework.security:spring-security-test'
+
     implementation "org.hsqldb:hsqldb:2.4.1"
     runtimeOnly 'org.hsqldb:hsqldb'
 //    runtimeOnly 'com.h2database:h2'

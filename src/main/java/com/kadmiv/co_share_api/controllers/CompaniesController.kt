@@ -45,10 +45,10 @@ class CompaniesController {
                 msg = "Problem with data loading!!!"
                 output.setErrorResult(ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body(
                         ErrorBuilder()
-                                .setError("Some Error")
+                                .setMessage(msg)
+                                .setError(ex)
                                 .setStatus(HttpStatus.INTERNAL_SERVER_ERROR.value())
                                 .setPath("/$controllerPath")
-                                .setMessage(msg)
                                 .build()
                 ))
             }
@@ -87,10 +87,10 @@ class CompaniesController {
                 msg = "Data wasn't add!!!"
                 output.setErrorResult(ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body(
                         ErrorBuilder()
-                                .setError("Some Error")
+                                .setMessage(msg)
+                                .setError(ex)
                                 .setStatus(HttpStatus.INTERNAL_SERVER_ERROR.value())
                                 .setPath("/$controllerPath")
-                                .setMessage(msg)
                                 .build()
                 ))
             }
@@ -116,10 +116,10 @@ class CompaniesController {
                 msg = "Problem with data loading!!!"
                 output.setErrorResult(ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body(
                         ErrorBuilder()
-                                .setError("Some Error")
+                                .setMessage(msg)
+                                .setError(ex)
                                 .setStatus(HttpStatus.INTERNAL_SERVER_ERROR.value())
                                 .setPath("/$controllerPath")
-                                .setMessage(msg)
                                 .build()
                 ))
             }
