@@ -2,7 +2,9 @@ package com.kadmiv.co_share_api.models.dto
 
 import org.springframework.security.core.GrantedAuthority
 import org.springframework.security.core.userdetails.UserDetails
+import java.util.*
 import javax.persistence.*
+import kotlin.collections.HashSet
 
 
 const val USER_JOIN_NAME = "author_card_id"
@@ -10,9 +12,20 @@ const val USER_JOIN_NAME = "author_card_id"
 @Entity
 @Table(name = "usr")
 class User : UserDetails {
+
+    //    @Id
+//    @GeneratedValue(strategy = GenerationType.AUTO)
+//    var id: Long? = null
+
+
     @Id
-    @GeneratedValue(strategy = GenerationType.AUTO)
-    var id: Long? = null
+//    @GeneratedValue(strategy = GenerationType.AUTO)
+    @Column(name = "id", length = 16, unique = true, nullable = false)
+    var id: UUID? = null
+
+    init {
+        id = UUID.randomUUID()
+    }
 
     var userLogin: String? = null
     //    var userEmail: String? = null
@@ -50,7 +63,7 @@ class User : UserDetails {
             joinColumns = [JoinColumn(name = "user_id")],
             inverseJoinColumns = [JoinColumn(name = "card_id")]
     )
-    private val cards: Set<Card> = HashSet()
+    val cards: Set<Card> = HashSet()
 
 
     override fun getAuthorities(): Collection<GrantedAuthority> {

@@ -1,5 +1,6 @@
 package com.kadmiv.co_share_api.models.dto
 
+import java.util.*
 import javax.persistence.*
 
 
@@ -9,12 +10,17 @@ const val COMPANY_CARD_JOIN_NAME = "company_card_id"
 @Table(name = "COMPANY")
 class Company {
 
+//    @Id
+//    @Column(name = "id")
+//    @GeneratedValue(strategy = GenerationType.AUTO) //
+//    // @GeneratedValue(strategy = GenerationType.SEQUENCE, generator = "id_Sequence")
+////    @SequenceGenerator(name = "id_Sequence", sequenceName = "ID_SEQ")
+//    var id: Long = 0
+
     @Id
-    @Column(name = "id")
-    @GeneratedValue(strategy = GenerationType.AUTO) //
-    // @GeneratedValue(strategy = GenerationType.SEQUENCE, generator = "id_Sequence")
-//    @SequenceGenerator(name = "id_Sequence", sequenceName = "ID_SEQ")
-    var id: Long = 0
+//    @GeneratedValue(strategy = GenerationType.AUTO)
+    @Column(name = "id", length = 16, unique = true, nullable = false)
+    var id: UUID = UUID.randomUUID()
 
     @Column(nullable = false)
     var name: String? = null

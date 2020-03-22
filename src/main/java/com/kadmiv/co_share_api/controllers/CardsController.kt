@@ -4,12 +4,15 @@ package com.kadmiv.co_share_api.controllers
 import com.kadmiv.co_share_api.models.base.ErrorBuilder
 import com.kadmiv.co_share_api.models.base.SuccessBuilder
 import com.kadmiv.co_share_api.models.dto.Card
+import com.kadmiv.co_share_api.models.dto.User
 import com.kadmiv.co_share_api.repo.card.CardService
 import org.slf4j.LoggerFactory
 import org.springframework.beans.factory.annotation.Autowired
 import org.springframework.http.HttpStatus
 import org.springframework.http.MediaType
 import org.springframework.http.ResponseEntity
+import org.springframework.security.core.annotation.AuthenticationPrincipal
+import org.springframework.security.core.context.SecurityContextHolder
 import org.springframework.web.bind.annotation.*
 import org.springframework.web.context.request.async.DeferredResult
 import java.util.concurrent.ForkJoinPool
@@ -29,7 +32,7 @@ class CardsController {
     internal var dataRepository: CardService? = null
 
     @GetMapping(produces = [MediaType.APPLICATION_JSON_VALUE])
-    open fun getAllCards(): DeferredResult<ResponseEntity<*>> {
+    open fun getAllCards(@AuthenticationPrincipal user: User): DeferredResult<ResponseEntity<*>> {
         LOG.info("")
         var msg = ""
 
@@ -59,12 +62,15 @@ class CardsController {
 
     @PostMapping(produces = [MediaType.APPLICATION_JSON_VALUE])
     open fun addNewCard(
+//            @AuthenticationPrincipal user: User,
             @RequestBody dataSet: ArrayList<Card>
     ): DeferredResult<ResponseEntity<*>> {
         LOG.info("")
 //        val requestDir = "$RESOURCE_PATH/$method"
 
         var msg = ""
+
+        val authentication = SecurityContextHolder.getContext().authentication;
 
         val output = DeferredResult<ResponseEntity<*>>()
 
@@ -73,6 +79,15 @@ class CardsController {
         ForkJoinPool.commonPool().submit {
             try {
 //                clearDataItemsDate(dataSet)
+                if (authentication != null) {
+                    val user: User = authentication.principal as User
+
+                    for (card in dataSet) {
+                        card.author = user
+                        LOG.info("")
+                    }
+                }
+
                 dataRepository?.insertItems(dataSet)
                 msg = "Data was add"
                 output.setResult(ResponseEntity.status(HttpStatus.OK).body(
