@@ -1,8 +1,8 @@
 package com.kadmiv.co_share_api.controllers
 
 //import org.apache.log4j.Logger
-import com.kadmiv.co_share_api.models.base.ErrorBuilder
-import com.kadmiv.co_share_api.models.base.SuccessBuilder
+import com.kadmiv.co_share_api.models.base.ServerAnswerBuilder
+
 import com.kadmiv.co_share_api.models.dto.Card
 import com.kadmiv.co_share_api.models.dto.User
 import com.kadmiv.co_share_api.repo.card.CardService
@@ -54,7 +54,7 @@ class CardsController {
             } catch (ex: java.lang.Exception) {
                 msg = "Problem with data loading!!!"
                 output.setErrorResult(ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body(
-                        ErrorBuilder()
+                        ServerAnswerBuilder()
                                 .setMessage(msg)
                                 .setError(ex)
                                 .setStatus(HttpStatus.INTERNAL_SERVER_ERROR.value())
@@ -101,7 +101,7 @@ class CardsController {
                     dataRepository?.insertItem(card)
                     msg = "Data was add"
                     output.setResult(ResponseEntity.status(HttpStatus.OK).body(
-                            SuccessBuilder()
+                            ServerAnswerBuilder()
                                     .setStatus(HttpStatus.OK.value())
                                     .setPath("/$controllerPath")
                                     .setMessage(msg)
@@ -110,7 +110,7 @@ class CardsController {
                 } else {
                     msg = "Data wasn't add!!!"
                     output.setErrorResult(ResponseEntity.status(HttpStatus.DESTINATION_LOCKED).body(
-                            ErrorBuilder()
+                            ServerAnswerBuilder()
                                     .setMessage(msg)
                                     .setError("Have same card error")
                                     .setStatus(HttpStatus.DESTINATION_LOCKED.value())
@@ -122,7 +122,7 @@ class CardsController {
 //                logger.error(method, ex)
                 msg = "Data wasn't add!!!"
                 output.setErrorResult(ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body(
-                        ErrorBuilder()
+                        ServerAnswerBuilder()
                                 .setMessage(msg)
                                 .setError(ex)
                                 .setStatus(HttpStatus.INTERNAL_SERVER_ERROR.value())
@@ -162,7 +162,7 @@ class CardsController {
                     if (oldCard.owner!!.id != user.id) {
                         msg = "Not have permission "
                         output.setErrorResult(ResponseEntity.status(HttpStatus.NOT_ACCEPTABLE).body(
-                                ErrorBuilder()
+                                ServerAnswerBuilder()
                                         .setMessage(msg)
                                         .setError("Not card owner error")
                                         .setStatus(HttpStatus.NOT_ACCEPTABLE.value())
@@ -179,7 +179,7 @@ class CardsController {
                     dataRepository?.insertItem(oldCard)
                     msg = "Data was add. Is may share: ${oldCard.mayUseForShare}"
                     output.setResult(ResponseEntity.status(HttpStatus.OK).body(
-                            SuccessBuilder()
+                            ServerAnswerBuilder()
                                     .setStatus(HttpStatus.OK.value())
                                     .setPath("/$controllerPath")
                                     .setMessage(msg)
@@ -188,7 +188,7 @@ class CardsController {
                 } else {
                     msg = "Data wasn't add!!!"
                     output.setErrorResult(ResponseEntity.status(HttpStatus.DESTINATION_LOCKED).body(
-                            ErrorBuilder()
+                            ServerAnswerBuilder()
                                     .setMessage(msg)
                                     .setError("Have same card error")
                                     .setStatus(HttpStatus.DESTINATION_LOCKED.value())
@@ -200,7 +200,7 @@ class CardsController {
 //                logger.error(method, ex)
                 msg = "Data wasn't add!!!"
                 output.setErrorResult(ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body(
-                        ErrorBuilder()
+                        ServerAnswerBuilder()
                                 .setMessage(msg)
                                 .setError(ex)
                                 .setStatus(HttpStatus.INTERNAL_SERVER_ERROR.value())
@@ -239,7 +239,7 @@ class CardsController {
             } catch (ex: java.lang.Exception) {
                 msg = "Problem with data loading!!!"
                 output.setErrorResult(ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body(
-                        ErrorBuilder()
+                        ServerAnswerBuilder()
                                 .setMessage(msg)
                                 .setError(ex)
                                 .setStatus(HttpStatus.INTERNAL_SERVER_ERROR.value())

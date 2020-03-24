@@ -1,8 +1,7 @@
 package com.kadmiv.co_share_api.controllers
 
 //import org.apache.log4j.Logger
-import com.kadmiv.co_share_api.models.base.ErrorBuilder
-import com.kadmiv.co_share_api.models.base.SuccessBuilder
+import com.kadmiv.co_share_api.models.base.ServerAnswerBuilder
 import com.kadmiv.co_share_api.models.dto.Category
 import com.kadmiv.co_share_api.repo.category.CategoryService
 import org.slf4j.LoggerFactory
@@ -45,7 +44,7 @@ class CategoryController {
             } catch (ex: java.lang.Exception) {
                 msg = "Problem with data loading!!!"
                 output.setErrorResult(ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body(
-                        ErrorBuilder()
+                        ServerAnswerBuilder()
                                 .setMessage(msg)
                                 .setError(ex)
                                 .setStatus(HttpStatus.INTERNAL_SERVER_ERROR.value())
@@ -77,7 +76,7 @@ class CategoryController {
                 dataRepository?.insertItems(dataSet)
                 msg = "Data was add"
                 output.setResult(ResponseEntity.status(HttpStatus.OK).body(
-                        SuccessBuilder()
+                        ServerAnswerBuilder()
                                 .setStatus(HttpStatus.OK.value())
                                 .setPath("/$controllerPath")
                                 .setMessage(msg)
@@ -87,7 +86,7 @@ class CategoryController {
 //                logger.error(method, ex)
                 msg = "Data wasn't add!!!"
                 output.setErrorResult(ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body(
-                        ErrorBuilder()
+                        ServerAnswerBuilder()
                                 .setMessage(msg)
                                 .setError(ex)
                                 .setStatus(HttpStatus.INTERNAL_SERVER_ERROR.value())

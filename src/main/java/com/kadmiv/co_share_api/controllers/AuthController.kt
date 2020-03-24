@@ -2,8 +2,7 @@ package com.kadmiv.co_share_api.controllers
 
 
 import com.kadmiv.co_share_api.config.secure.EncoderWrapper
-import com.kadmiv.co_share_api.models.base.ErrorBuilder
-import com.kadmiv.co_share_api.models.base.SuccessBuilder
+import com.kadmiv.co_share_api.models.base.ServerAnswerBuilder
 import com.kadmiv.co_share_api.models.dto.RegistrationModel
 import com.kadmiv.co_share_api.models.dto.Role
 import com.kadmiv.co_share_api.models.dto.User
@@ -18,7 +17,6 @@ import org.springframework.web.context.request.async.DeferredResult
 import java.lang.Exception
 import java.util.*
 import java.util.concurrent.ForkJoinPool
-import javax.servlet.Registration
 
 
 const val AUTH_PATH = "auth"
@@ -40,7 +38,7 @@ class AuthController {
     private val encoderWrapper: EncoderWrapper? = null
 
     @GetMapping()
-    fun checkAuthorization(@RequestBody user: RegistrationModel): DeferredResult<ResponseEntity<*>> {
+    fun checkAuthorization(): DeferredResult<ResponseEntity<*>> {
         var msg = ""
         LOG.info(msg)
 
@@ -56,8 +54,9 @@ class AuthController {
                     LOG.info("User authorization ${user.userLogin}")
                 }
 
+                msg = "Welcome!!!"
                 output.setResult(ResponseEntity.status(HttpStatus.OK).body(
-                        SuccessBuilder()
+                        ServerAnswerBuilder()
                                 .setStatus(HttpStatus.OK.value())
                                 .setPath("/$controllerPath")
                                 .setMessage(msg)
@@ -67,7 +66,7 @@ class AuthController {
             } catch (ex: Exception) {
                 msg = "Problem working with db"
                 output.setErrorResult(ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body(
-                        ErrorBuilder()
+                        ServerAnswerBuilder()
                                 .setMessage(msg)
                                 .setError(ex)
                                 .setStatus(HttpStatus.INTERNAL_SERVER_ERROR.value())
@@ -110,7 +109,7 @@ class AuthController {
                         if (dbUser != null) {
                             msg = "User was created"
                             output.setResult(ResponseEntity.status(HttpStatus.CREATED).body(
-                                    SuccessBuilder()
+                                    ServerAnswerBuilder()
                                             .setStatus(HttpStatus.CREATED.value())
                                             .setPath("/$controllerPath/$REGISTRATION_PATH")
                                             .setMessage(msg)
@@ -118,7 +117,7 @@ class AuthController {
                             ))
                         } else {
                             output.setErrorResult(ResponseEntity.status(HttpStatus.NOT_ACCEPTABLE).body(
-                                    ErrorBuilder()
+                                    ServerAnswerBuilder()
                                             .setMessage(validation.message)
                                             .setError("Writing with db error")
                                             .setStatus(HttpStatus.NOT_ACCEPTABLE.value())
@@ -130,7 +129,7 @@ class AuthController {
                     } catch (ex: Exception) {
                         msg = "Problem working with db"
                         output.setErrorResult(ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body(
-                                ErrorBuilder()
+                                ServerAnswerBuilder()
                                         .setMessage(msg)
                                         .setError(ex)
                                         .setStatus(HttpStatus.INTERNAL_SERVER_ERROR.value())
@@ -142,7 +141,7 @@ class AuthController {
 
                 } else {
                     output.setErrorResult(ResponseEntity.status(HttpStatus.NOT_ACCEPTABLE).body(
-                            ErrorBuilder()
+                            ServerAnswerBuilder()
                                     .setMessage(msg)
                                     .setError("Validation error")
                                     .setStatus(HttpStatus.NOT_ACCEPTABLE.value())
@@ -155,7 +154,7 @@ class AuthController {
             } catch (ex: Exception) {
                 msg = "Problem working with db"
                 output.setErrorResult(ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body(
-                        ErrorBuilder()
+                        ServerAnswerBuilder()
                                 .setMessage(msg)
                                 .setError(ex)
                                 .setStatus(HttpStatus.INTERNAL_SERVER_ERROR.value())

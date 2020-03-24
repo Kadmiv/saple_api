@@ -1,7 +1,7 @@
 package com.kadmiv.co_share_api.config.secure
 
 import com.google.gson.Gson
-import com.kadmiv.co_share_api.models.base.ErrorBuilder
+import com.kadmiv.co_share_api.models.base.ServerAnswerBuilder
 import org.springframework.http.HttpStatus
 import org.springframework.security.core.AuthenticationException
 import org.springframework.security.web.authentication.www.BasicAuthenticationEntryPoint
@@ -20,7 +20,7 @@ class AuthenticationEntryPointImpl : BasicAuthenticationEntryPoint() {
         response.status = HttpServletResponse.SC_UNAUTHORIZED
         val writer = response.writer
         writer.println(Gson().toJson(
-                ErrorBuilder()
+                ServerAnswerBuilder()
                         .setMessage(HttpStatus.UNAUTHORIZED.reasonPhrase)
                         .setError(HttpStatus.UNAUTHORIZED.reasonPhrase)
                         .setStatus(HttpStatus.UNAUTHORIZED.value())
