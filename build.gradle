@@ -24,22 +24,32 @@ plugins {
 group = 'com.kadmiv'
 //version = '0.0.1-SNAPSHOT'
 sourceCompatibility = '1.8'
-ext.baseName = "app"
-ext.archiveName = "app"
-ext.basePath = " com.kadmiv.co_share_api"
 
-bootJar {
-    mainClassName = "${basePath}.ApplicationKt"
-//    sourceSets.main.java.srcDirs = ['src']
-//    version = version
-    baseName = baseName
-    manifest {
-        attributes 'Start-Class':"${basePath}.ApplicationKt"
-    }
-}
+ext.group = 'com.kadmiv.co_share_api'
+ext.baseName = 'billing'
+ext.version = '1.0.4'
+sourceCompatibility = '1.8'
 
 repositories {
     mavenCentral()
+    maven { url 'https://repo.spring.io/milestone' }
+    maven { url 'https://repo.spring.io/snapshot' }
+}
+
+bootJar {
+    mainClassName = 'com.kadmiv.co_share_api.ApplicationKt'
+//    sourceSets.main.java.srcDirs = ['src']
+    version = version
+    baseName = baseName
+    manifest {
+        attributes 'Start-Class': 'com.kadmiv.co_share_api.ApplicationKt'
+    }
+
+//    requiresUnpack '**/jruby-complete-*.jar'
+//    launchScript {
+//        properties 'logFilename': 'example-app.log'
+//        script = file('src/custom.script')
+//    }
 }
 
 dependencies {

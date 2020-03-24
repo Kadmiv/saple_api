@@ -14,14 +14,14 @@ import javax.annotation.PostConstruct
 
 
 @SpringBootApplication
-//@ComponentScan(
-//        value = [
-//            "com.kadmiv.co_share_api.controllers",
-//            "com.kadmiv.co_share_api.config",
-//            "com.kadmiv.co_share_api.repo"
-//        ]
-//)
-//@EntityScan("com.kadmiv.co_share_api.models")
+@ComponentScan(
+        value = [
+            "com.kadmiv.co_share_api.controllers",
+            "com.kadmiv.co_share_api.config",
+            "com.kadmiv.co_share_api.repo"
+        ]
+)
+@EntityScan("com.kadmiv.co_share_api.models")
 open class Application {
 
     private val LOG = LoggerFactory.getLogger(Application::class.java)
