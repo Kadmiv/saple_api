@@ -30,6 +30,7 @@ open class SecurityConfig : WebSecurityConfigurerAdapter() {
                 .csrf().disable()
                 .authorizeRequests()
                 .antMatchers("/$REGISTRATION_PATH").permitAll()
+                .antMatchers("/test").permitAll()
                 .anyRequest().authenticated()
                 .and()
                 .formLogin().disable()
