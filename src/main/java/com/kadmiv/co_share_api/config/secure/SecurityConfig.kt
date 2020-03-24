@@ -1,6 +1,6 @@
 package com.kadmiv.co_share_api.config.secure
 
-import com.kadmiv.co_share_api.controllers.REGISTRATION_PATH
+import com.kadmiv.co_share_api.controllers.AUTH_PATH
 import com.kadmiv.co_share_api.repo.user.UserService
 import org.springframework.beans.factory.annotation.Autowired
 import org.springframework.context.annotation.Configuration
@@ -29,7 +29,7 @@ open class SecurityConfig : WebSecurityConfigurerAdapter() {
         http
                 .csrf().disable()
                 .authorizeRequests()
-                .antMatchers("/$REGISTRATION_PATH").permitAll()
+                .antMatchers("/$AUTH_PATH").permitAll()
                 .antMatchers("/test").permitAll()
                 .anyRequest().authenticated()
                 .and()

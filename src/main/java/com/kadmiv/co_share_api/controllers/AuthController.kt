@@ -12,26 +12,26 @@ import org.slf4j.LoggerFactory
 import org.springframework.beans.factory.annotation.Autowired
 import org.springframework.http.HttpStatus
 import org.springframework.http.ResponseEntity
-import org.springframework.web.bind.annotation.PostMapping
-import org.springframework.web.bind.annotation.RequestBody
-import org.springframework.web.bind.annotation.RequestMapping
-import org.springframework.web.bind.annotation.RestController
+import org.springframework.security.core.context.SecurityContextHolder
+import org.springframework.web.bind.annotation.*
 import org.springframework.web.context.request.async.DeferredResult
 import java.lang.Exception
 import java.util.*
 import java.util.concurrent.ForkJoinPool
+import javax.servlet.Registration
 
 
+const val AUTH_PATH = "auth"
 const val REGISTRATION_PATH = "registration"
 
 //@Controller
 @RestController()
-@RequestMapping(value = ["/$REGISTRATION_PATH"])
-class RegistrationController {
+@RequestMapping(value = ["/$AUTH_PATH"])
+class AuthController {
 
-    private val LOG = LoggerFactory.getLogger(RegistrationController::class.java)
+    private val LOG = LoggerFactory.getLogger(AuthController::class.java)
 
-    private val controllerPath = REGISTRATION_PATH
+    private val controllerPath = AUTH_PATH
 
     @Autowired
     private val userRepo: UserRepo? = null
@@ -39,12 +39,49 @@ class RegistrationController {
     @Autowired
     private val encoderWrapper: EncoderWrapper? = null
 
-//    @GetMapping()
-//    fun registration(): String {
-//        return "registration"
-//    }
+    @GetMapping()
+    fun checkAuthorization(@RequestBody user: RegistrationModel): DeferredResult<ResponseEntity<*>> {
+        var msg = ""
+        LOG.info(msg)
 
-    @PostMapping()
+        val authentication = SecurityContextHolder.getContext().authentication;
+
+        val output = DeferredResult<ResponseEntity<*>>()
+        prepareOutput(output)
+
+        ForkJoinPool.commonPool().submit {
+            try {
+                if (authentication != null) {
+                    val user: User = authentication.principal as User
+                    LOG.info("User authorization ${user.userLogin}")
+                }
+
+                output.setResult(ResponseEntity.status(HttpStatus.OK).body(
+                        SuccessBuilder()
+                                .setStatus(HttpStatus.OK.value())
+                                .setPath("/$controllerPath")
+                                .setMessage(msg)
+                                .build()
+                ))
+
+            } catch (ex: Exception) {
+                msg = "Problem working with db"
+                output.setErrorResult(ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body(
+                        ErrorBuilder()
+                                .setMessage(msg)
+                                .setError(ex)
+                                .setStatus(HttpStatus.INTERNAL_SERVER_ERROR.value())
+                                .setPath("/$controllerPath")
+                                .build()
+                ))
+            }
+        }
+
+        return output
+
+    }
+
+    @PostMapping("/$REGISTRATION_PATH")
     fun addUser(@RequestBody user: RegistrationModel): DeferredResult<ResponseEntity<*>> {
         var msg = ""
         LOG.info(msg)
@@ -75,7 +112,7 @@ class RegistrationController {
                             output.setResult(ResponseEntity.status(HttpStatus.CREATED).body(
                                     SuccessBuilder()
                                             .setStatus(HttpStatus.CREATED.value())
-                                            .setPath("/$controllerPath")
+                                            .setPath("/$controllerPath/$REGISTRATION_PATH")
                                             .setMessage(msg)
                                             .build()
                             ))
@@ -85,7 +122,7 @@ class RegistrationController {
                                             .setMessage(validation.message)
                                             .setError("Writing with db error")
                                             .setStatus(HttpStatus.NOT_ACCEPTABLE.value())
-                                            .setPath("/$controllerPath")
+                                            .setPath("/$controllerPath/$REGISTRATION_PATH")
                                             .build()
                             ))
                         }
@@ -97,7 +134,7 @@ class RegistrationController {
                                         .setMessage(msg)
                                         .setError(ex)
                                         .setStatus(HttpStatus.INTERNAL_SERVER_ERROR.value())
-                                        .setPath("/$controllerPath")
+                                        .setPath("/$controllerPath/$REGISTRATION_PATH")
                                         .build()
                         ))
                     }
@@ -109,20 +146,20 @@ class RegistrationController {
                                     .setMessage(msg)
                                     .setError("Validation error")
                                     .setStatus(HttpStatus.NOT_ACCEPTABLE.value())
-                                    .setPath("/$controllerPath")
+                                    .setPath("/$controllerPath/$REGISTRATION_PATH")
                                     .setMessage(validation.message)
                                     .build()
                     ))
                 }
 
-            } catch (ex: java.lang.Exception) {
+            } catch (ex: Exception) {
                 msg = "Problem working with db"
                 output.setErrorResult(ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body(
                         ErrorBuilder()
                                 .setMessage(msg)
                                 .setError(ex)
                                 .setStatus(HttpStatus.INTERNAL_SERVER_ERROR.value())
-                                .setPath("/$controllerPath")
+                                .setPath("/$controllerPath/$REGISTRATION_PATH")
                                 .build()
                 ))
             }
