@@ -22,8 +22,21 @@ plugins {
 }
 
 group = 'com.kadmiv'
-version = '0.0.1-SNAPSHOT'
+//version = '0.0.1-SNAPSHOT'
 sourceCompatibility = '1.8'
+ext.baseName = "app"
+ext.archiveName = "app"
+ext.basePath = " com.kadmiv.co_share_api"
+
+bootJar {
+    mainClassName = "${basePath}.ApplicationKt"
+//    sourceSets.main.java.srcDirs = ['src']
+//    version = version
+    baseName = baseName
+    manifest {
+        attributes 'Start-Class':"${basePath}.ApplicationKt"
+    }
+}
 
 repositories {
     mavenCentral()
