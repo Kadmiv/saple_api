@@ -77,7 +77,6 @@ class AuthController {
         }
 
         return output
-
     }
 
     @PostMapping("/$REGISTRATION_PATH")
